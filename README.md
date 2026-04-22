@@ -249,7 +249,7 @@ python test_suite.py
 - [ ] Real SMS integration (Twilio)
 - [ ] Book cover image support
 - [ ] Barcode / QR code scanning
-- [ ] Loan renewal / extension
+- [x] Loan renewal / extension
 - [ ] Inter-library loan tracking
 
 ---
