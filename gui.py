@@ -1,15 +1,3 @@
-"""
-gui.py - Tkinter GUI for the Library Management System
-
-Launch:
-    python gui.py
-
-Requires all other modules in the same directory:
-    models.py, auth.py, library.py, persistence.py, analytics.py,
-    recommender.py, notifications.py, validators.py, exceptions.py,
-    config.py, session_manager.py, reports_export.py, book_import.py
-"""
-
 import os
 import sys
 import tkinter as tk
@@ -17,7 +5,7 @@ from tkinter import ttk, messagebox, filedialog, simpledialog
 from datetime import date, timedelta
 from typing import Optional
 
-# ── Bootstrap path ────────────────────────────────────────────────────────────
+# ----------------- Bootstrap path -------------------------------------------------------------------------------
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from library import LibrarySystem
@@ -27,7 +15,7 @@ from persistence import save_library, load_library
 
 SAVE_FILE = "library_data.json"
 
-# ── Palette & fonts ───────────────────────────────────────────────────────────
+# -----------Palette & fonts ---------------------------------------------------------------------------------
 CLR = {
     "bg":        "#0f1117",
     "surface":   "#1a1d27",
@@ -52,7 +40,7 @@ FONT_MONO   = ("Consolas", 9)
 FONT_BTN    = ("Segoe UI", 10, "bold")
 
 
-# ── Helpers ───────────────────────────────────────────────────────────────────
+# ---------- Helpers -------------------------------------------------------------------------------------
 
 def styled_btn(parent, text, command, color=None, width=18, **kw):
     bg = color or CLR["accent"]
@@ -137,9 +125,7 @@ def section_label(parent, text):
     return f
 
 
-# ══════════════════════════════════════════════════════════════════════════════
-#  LOGIN WINDOW
-# ══════════════════════════════════════════════════════════════════════════════
+#  ===========================LOGIN WINDOW================================================================================
 
 class LoginWindow(tk.Toplevel):
     def __init__(self, master, lib: LibrarySystem, callback):
@@ -277,9 +263,7 @@ class LoginWindow(tk.Toplevel):
             self._status.config(fg=CLR["danger"], text=str(e))
 
 
-# ══════════════════════════════════════════════════════════════════════════════
-#  MAIN APPLICATION
-# ══════════════════════════════════════════════════════════════════════════════
+# --------------------------------  MAIN APPLICATION---------------------------------------------------------
 
 class LibraryApp(tk.Tk):
     def __init__(self):
@@ -302,7 +286,7 @@ class LibraryApp(tk.Tk):
         self._build_shell()
         self.after(200, self._show_login)
 
-    # ── Shell (sidebar + content area) ───────────────────────────────────────
+    # ----------- Shell (sidebar + content area) ----------------------------------------------------
 
     def _build_shell(self):
         self._sidebar = tk.Frame(self, bg=CLR["surface"], width=210)
@@ -401,7 +385,7 @@ class LibraryApp(tk.Tk):
         btn.bind("<Enter>", lambda e: btn.config(bg=CLR["card"]))
         btn.bind("<Leave>", lambda e: btn.config(bg=CLR["surface"]))
 
-    # ── Content area helpers ──────────────────────────────────────────────────
+    # --------------- Content area helpers ---------------------------------------------------------
 
     def _clear_content(self):
         for w in self._content.winfo_children():
@@ -452,11 +436,11 @@ class LibraryApp(tk.Tk):
         except Exception as e:
             messagebox.showerror("Save Error", str(e))
 
-    # ══════════════════════════════════════════════════════════════════════════
+    #==============================================================================================
     #  PAGES
-    # ══════════════════════════════════════════════════════════════════════════
+    # ==============================================================================================
 
-    # ── Search Books ──────────────────────────────────────────────────────────
+    # ----------------- Search Books ----------------------------------------------------------------
 
     def _page_search(self):
         self._clear_content()
@@ -514,7 +498,7 @@ class LibraryApp(tk.Tk):
         styled_btn(top, "🔍 Search", do_search, width=12).grid(row=0, column=5, padx=8)
         do_search()
 
-    # ── Inventory ─────────────────────────────────────────────────────────────
+    # --------- Inventory --------------------------------------------------------------------------------
 
     def _page_inventory(self):
         self._clear_content()
@@ -555,7 +539,7 @@ class LibraryApp(tk.Tk):
         tv.tag_configure("ok", foreground=CLR["text"])
         tv.tag_configure("na", foreground=CLR["muted"])
 
-    # ── Add Book ──────────────────────────────────────────────────────────────
+    # ------- Add Book -----------------------------------------------------
 
     def _page_add_book(self):
         self._clear_content()
@@ -611,7 +595,7 @@ class LibraryApp(tk.Tk):
         styled_btn(body, "➕ Add Book", submit, width=20).grid(
             row=len(fields)+1, column=1, sticky="w", padx=(12, 0))
 
-    # ── Delete Book ───────────────────────────────────────────────────────────
+    # ------------ Delete Book --------------------------------------------------------------------
 
     def _page_delete_book(self):
         self._clear_content()
@@ -646,7 +630,7 @@ class LibraryApp(tk.Tk):
         styled_btn(self._content, "🗑️ Delete Selected", delete_selected,
                    color=CLR["danger"], width=24).pack(pady=8)
 
-    # ── Edit Book ─────────────────────────────────────────────────────────────
+    # -------------- Edit Book --------------------------------------------------------------------
 
     def _page_edit_book(self):
         self._clear_content()
@@ -720,7 +704,7 @@ class LibraryApp(tk.Tk):
         styled_btn(edit_frame, "💾 Save Changes", save_edit, width=18).grid(
             row=5, column=0, columnspan=2, sticky="w", padx=6, pady=8)
 
-    # ── Borrow ────────────────────────────────────────────────────────────────
+    # ----------- Borrow ----------------------------------------------------------------
 
     def _page_borrow(self):
         self._clear_content()
@@ -773,7 +757,7 @@ class LibraryApp(tk.Tk):
         styled_btn(bot, "📖 Borrow Selected", borrow, width=22).pack(side="left", padx=8)
         status.pack(side="left")
 
-    # ── Return ────────────────────────────────────────────────────────────────
+    # ------- Return ------------------------------------------------------------------------
 
     def _page_return(self):
         self._clear_content()
@@ -832,7 +816,7 @@ class LibraryApp(tk.Tk):
         styled_btn(bot, "🔄 Return Selected", do_return, width=22).pack(side="left", padx=8)
         status_lbl.pack(side="left")
 
-    # ── Reserve ───────────────────────────────────────────────────────────────
+    # ------ Reserve ------------------------------------------------
 
     def _page_reserve(self):
         self._clear_content()
@@ -872,7 +856,7 @@ class LibraryApp(tk.Tk):
         styled_btn(self._content, "🔒 Reserve Selected", reserve, width=24).pack(pady=4)
         status_lbl.pack()
 
-    # ── My History ────────────────────────────────────────────────────────────
+    # -------------------- My History -------------------------------------------------------
 
     def _page_my_history(self):
         self._clear_content()
@@ -920,7 +904,7 @@ class LibraryApp(tk.Tk):
         tv.tag_configure("over", foreground=CLR["danger"])
         tv.tag_configure("ok",   foreground=CLR["text"])
 
-    # ── Recommendations ───────────────────────────────────────────────────────
+    # ------- Recommendations ---------------------------------------------------------------
 
     def _page_recommendations(self):
         self._clear_content()
@@ -954,7 +938,7 @@ class LibraryApp(tk.Tk):
                          bg=CLR["card"], fg=CLR["muted"], font=FONT_SMALL,
                          wraplength=700, anchor="w").pack(anchor="w")
 
-    # ── Users ─────────────────────────────────────────────────────────────────
+    # ----------------- Users --------------------------------------------------------------------------
 
     def _page_users(self):
         self._clear_content()
@@ -1006,7 +990,7 @@ class LibraryApp(tk.Tk):
             styled_btn(bot, "🗑️ Delete User", delete_user,
                        color=CLR["danger"], width=16).pack(side="left", padx=4)
 
-    # ── Create User ───────────────────────────────────────────────────────────
+    # ------ Create User -----------------------------------------------------------
 
     def _page_create_user(self):
         self._clear_content()
@@ -1062,7 +1046,7 @@ class LibraryApp(tk.Tk):
         styled_btn(body, "👤 Create User", create, width=20).grid(
             row=len(fields)+2, column=1, sticky="w", padx=12, pady=4)
 
-    # ── Registrations ─────────────────────────────────────────────────────────
+    # ----------------- Registrations -------------------------------------------------------------------------
 
     def _page_registrations(self):
         self._clear_content()
@@ -1111,7 +1095,7 @@ class LibraryApp(tk.Tk):
         styled_btn(bot, "❌ Reject", reject, color=CLR["danger"], width=14).pack(
             side="left", padx=4)
 
-    # ── Fines ─────────────────────────────────────────────────────────────────
+    # ---------------- Fines ----------------------------------------------------------------
 
     def _page_fines(self):
         self._clear_content()
@@ -1169,7 +1153,7 @@ class LibraryApp(tk.Tk):
             styled_btn(bot, "🎁 Waive Fine", waive, color=CLR["warn"], width=16).pack(
                 side="left", padx=4)
 
-    # ── Overdue Report ────────────────────────────────────────────────────────
+    # ------------------------ Overdue Report -------------------------------------------------------------------------------
 
     def _page_overdue(self):
         self._clear_content()
@@ -1197,7 +1181,7 @@ class LibraryApp(tk.Tk):
             f"  {len(rows)} overdue book(s)   |   Total accrued fines: ₹{total_fine:.2f}",
             fg=CLR["warn"]).pack(anchor="w", padx=16, pady=4)
 
-    # ── Send Alerts ───────────────────────────────────────────────────────────
+    # ----------------------- Send Alerts ------------------------------------------------------------
 
     def _do_send_alerts(self):
         try:
@@ -1210,7 +1194,7 @@ class LibraryApp(tk.Tk):
             sys.stdout = sys.__stdout__
             messagebox.showerror("Error", str(e))
 
-    # ── Dashboard ─────────────────────────────────────────────────────────────
+    # ------------------------------ Dashboard -------------------------------------------------------------------------
 
     def _page_dashboard(self):
         self._clear_content()
@@ -1229,7 +1213,7 @@ class LibraryApp(tk.Tk):
         overdue_rows = overdue_report(self.lib)
         total_fines  = sum(u.fine_amount for u in users)
 
-        # ── KPI cards ─────────────────────────────────────────────────────────
+        # ----------- KPI cards --------------------------------------------
         kpi_row = tk.Frame(self._content, bg=CLR["bg"])
         kpi_row.pack(fill="x", padx=16, pady=12)
 
@@ -1262,7 +1246,7 @@ class LibraryApp(tk.Tk):
                   background=[("selected", CLR["accent"])],
                   foreground=[("selected", CLR["bg"])])
 
-        # ── Top Borrowed ──────────────────────────────────────────────────────
+        # -------------- Top Borrowed -------------------------------------------------------
         t1 = tk.Frame(nb, bg=CLR["bg"])
         nb.add(t1, text="🏆 Top Books")
         freq = Counter(r.book_id for r in records)
@@ -1275,7 +1259,7 @@ class LibraryApp(tk.Tk):
             tv.insert("", "end", values=(rank, b.title if b else bid,
                 b.author if b else "—", b.genre if b else "—", cnt))
 
-        # ── Top Borrowers ─────────────────────────────────────────────────────
+        # ------------ Top Borrowers -----------------------------------------------------------------------------
         t2 = tk.Frame(nb, bg=CLR["bg"])
         nb.add(t2, text="📚 Top Users")
         ufreq = Counter(r.user_id for r in records)
@@ -1289,7 +1273,7 @@ class LibraryApp(tk.Tk):
                 u.full_name if u else "—", cnt,
                 f"₹{u.fine_amount:.2f}" if u else "—"))
 
-        # ── Genre Distribution ────────────────────────────────────────────────
+        # --------------------- Genre Distribution -----------------------------------
         t3 = tk.Frame(nb, bg=CLR["bg"])
         nb.add(t3, text="📊 Genres")
         gcnt  = Counter(b.genre for b in books)
@@ -1303,7 +1287,7 @@ class LibraryApp(tk.Tk):
         for g, cnt in gcnt.most_common():
             tv.insert("", "end", values=(g, cnt, gborrow.get(g, 0)))
 
-        # ── Overdue List ──────────────────────────────────────────────────────
+        # ------------------------- Overdue List ------------------------------------------
         t4 = tk.Frame(nb, bg=CLR["bg"])
         nb.add(t4, text="📛 Overdue")
         cols   = ["Record",  "User",  "Book",  "Due",  "Days", "Fine"]
@@ -1318,7 +1302,7 @@ class LibraryApp(tk.Tk):
                 str(r.due_date), days, f"₹{fine:.2f}"), tags=("ov",))
         tv.tag_configure("ov", foreground=CLR["danger"])
 
-    # ── Audit Log ─────────────────────────────────────────────────────────────
+    # ------------------- Audit Log -----------------------------------------------------------
 
     def _page_logs(self):
         self._clear_content()
@@ -1358,7 +1342,7 @@ class LibraryApp(tk.Tk):
             fg=CLR["muted"]).pack(anchor="w", padx=16, pady=2)
 
 
-# ── Entry point ───────────────────────────────────────────────────────────────
+# ----------------------------------------- Entry point ----------------------------------------------------
 
 def main():
     app = LibraryApp()
